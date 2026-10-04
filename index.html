@@ -25,20 +25,50 @@
   #hud-top h1 { font-size:17px; font-weight:700; letter-spacing:.04em; }
   #hud-top h1 span { background:linear-gradient(90deg,#7cc4ff,#c49aff,#ff9ad5); -webkit-background-clip:text; background-clip:text; color:transparent; }
   #hud-top .sub { font-size:11px; opacity:.7; letter-spacing:.12em; text-transform:uppercase; }
-  #toolbar { position:fixed; top:calc(12px + env(safe-area-inset-top)); right:12px; z-index:20; display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; max-width:60vw; }
+  #hud-top .spacer { flex:1; pointer-events:none; }
+  #hud-top .chip.icon { pointer-events:auto; }
+  button.chip.icon { width:38px; height:38px; min-height:38px; padding:0; font-size:16px; display:inline-flex; align-items:center; justify-content:center; border-radius:12px; flex:0 0 auto; }
+  #btn-ui-show { position:fixed; top:calc(10px + env(safe-area-inset-top)); right:12px; z-index:40; display:none; }
+  body.ui-hidden #btn-ui-show { display:inline-flex; }
+  /* Kino-Modus: alles ausblenden außer Canvas (+ Toast/Joystick fürs Spielgefühl) */
+  body.ui-hidden #hud-top, body.ui-hidden #drawer, body.ui-hidden #res, body.ui-hidden #info,
+  body.ui-hidden #bottom, body.ui-hidden #perf, body.ui-hidden #build, body.ui-hidden #diplo { display:none !important; }
+  /* Slide-in-Menü: ein Ort für alles */
+  #drawer { position:fixed; top:0; left:0; bottom:0; width:300px; max-width:86vw; z-index:35;
+    background:rgba(8,13,30,.94); border-right:1px solid rgba(120,160,255,.28);
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    box-shadow:14px 0 50px rgba(0,0,0,.55);
+    transform:translateX(-105%); transition:transform .25s ease;
+    display:flex; flex-direction:column; overflow:hidden;
+    padding:calc(12px + env(safe-area-inset-top)) 14px calc(12px + env(safe-area-inset-bottom)); }
+  #drawer.open { transform:translateX(0); }
+  #drawer-head { display:flex; align-items:flex-start; margin-bottom:6px; }
+  #drawer-head .type { font-size:10px; text-transform:uppercase; letter-spacing:.14em; color:#8fb4ff; }
+  #drawer-head h2 { font-size:17px; }
+  #drawer-close, #info-close { margin-left:auto; flex:0 0 auto; width:34px; height:34px; border-radius:10px; cursor:pointer;
+    border:1px solid rgba(120,160,255,.3); background:rgba(60,100,220,.15); color:#e2ecff; font-size:14px; touch-action:manipulation; }
+  #drawer-body { overflow-y:auto; flex:1; }
+  #drawer-body h3 { font-size:11px; text-transform:uppercase; letter-spacing:.12em; opacity:.55; margin:12px 0 7px; }
+  #drawer-body .help { font-size:12px; line-height:1.7; opacity:.75; }
+  .dgrid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+  .dgrid .chip { min-height:42px; font-size:12px; white-space:nowrap; }
   button.chip { pointer-events:auto; background:rgba(15,22,45,.78); border:1px solid rgba(120,160,255,.25);
-    color:#dbe7ff; font-size:12px; padding:7px 12px; border-radius:999px; cursor:pointer; backdrop-filter:blur(10px); transition:.18s;
+    color:#dbe7ff; font-size:12px; padding:7px 12px; border-radius:999px; cursor:pointer; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); transition:.18s;
     min-height:34px; touch-action:manipulation; user-select:none; -webkit-user-select:none; }
   button.chip:hover { border-color:rgba(140,180,255,.6); background:rgba(30,45,90,.85); transform:translateY(-1px); }
   button.chip.active { background:rgba(70,120,255,.28); border-color:#6ea8ff; box-shadow:0 0 14px rgba(110,168,255,.35); }
-  #planets-bar { position:fixed; left:12px; top:110px; z-index:20; display:flex; flex-direction:column; gap:5px; max-height:calc(100vh - 520px); overflow-y:auto; padding-right:2px; }
-  #planets-bar button { width:104px; text-align:left; font-size:12px; padding:7px 10px; border-radius:10px; cursor:pointer;
-    background:rgba(10,15,32,.62); border:1px solid rgba(120,160,255,.18); color:#c9d8ff; backdrop-filter:blur(8px); transition:.15s;
-    min-height:34px; touch-action:manipulation; }
+  #drawer #planets-bar { display:flex; flex-direction:column; gap:5px; }
+  #drawer #planets-bar button { width:100%; text-align:left; font-size:12.5px; padding:9px 11px; border-radius:10px; cursor:pointer;
+    background:rgba(10,15,32,.62); border:1px solid rgba(120,160,255,.18); color:#c9d8ff; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition:.15s;
+    min-height:40px; touch-action:manipulation; }
   #planets-bar button:hover, #planets-bar button.active { border-color:#6ea8ff; background:rgba(50,85,170,.45); color:#fff; }
   #planets-bar button i { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:baseline; }
+  /* Info nur als Kontext-Panel bei Auswahl */
+  #info.hidden { display:none; }
+  #info-close { width:30px; height:30px; font-size:12px; }
+  #info-head .chev { margin-right:8px; }
   #info { position:fixed; left:12px; bottom:86px; width:300px; max-width:calc(100vw - 24px); z-index:20;
-    background:rgba(8,12,28,.82); border:1px solid rgba(120,160,255,.25); border-radius:16px; padding:14px 15px; backdrop-filter:blur(14px);
+    background:rgba(8,12,28,.82); border:1px solid rgba(120,160,255,.25); border-radius:16px; padding:14px 15px; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
     box-shadow:0 10px 40px rgba(0,0,0,.5); }
   #info-head { cursor:pointer; user-select:none; -webkit-user-select:none; }
   #info-head .chev { float:right; opacity:.6; transition:transform .2s; }
@@ -54,16 +84,14 @@
   #info .row button:hover { background:rgba(80,130,255,.32); }
   #info.collapsed p, #info.collapsed dl, #info.collapsed .row { display:none; }
   #bottom { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(12px + env(safe-area-inset-bottom)); z-index:20; display:flex; align-items:center; gap:12px;
-    background:rgba(8,12,28,.78); border:1px solid rgba(120,160,255,.22); border-radius:999px; padding:9px 16px; backdrop-filter:blur(12px); max-width:calc(100vw - 24px); flex-wrap:wrap; justify-content:center; }
+    background:rgba(8,12,28,.78); border:1px solid rgba(120,160,255,.22); border-radius:999px; padding:9px 16px; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); max-width:calc(100vw - 24px); flex-wrap:wrap; justify-content:center; }
   #bottom label { font-size:11px; text-transform:uppercase; letter-spacing:.12em; opacity:.7; }
   #speed { width:170px; accent-color:#6ea8ff; cursor:pointer; min-height:34px; }
   #clock { font-size:12px; font-variant-numeric:tabular-nums; opacity:.9; min-width:170px; text-align:center; }
-  #hint { position:fixed; right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); z-index:20; font-size:11px; line-height:1.6; opacity:.65; text-align:right;
-    background:rgba(8,12,28,.6); padding:8px 12px; border-radius:12px; border:1px solid rgba(120,160,255,.15); }
   /* Ressourcenleiste */
   #res { position:fixed; top:calc(64px + env(safe-area-inset-top)); left:50%; transform:translateX(-50%); z-index:20;
     display:flex; gap:14px; align-items:center; background:rgba(8,12,28,.78); border:1px solid rgba(120,160,255,.22);
-    border-radius:999px; padding:7px 18px; font-size:13px; font-variant-numeric:tabular-nums; backdrop-filter:blur(12px);
+    border-radius:999px; padding:7px 18px; font-size:13px; font-variant-numeric:tabular-nums; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     white-space:nowrap; max-width:calc(100vw - 24px); overflow-x:auto; scrollbar-width:none; }
   #res::-webkit-scrollbar { display:none; }
   #res b { font-weight:700; }
@@ -71,7 +99,7 @@
   /* Baumenü */
   #build { position:fixed; top:calc(110px + env(safe-area-inset-top)); right:12px; width:330px; max-width:calc(100vw - 24px);
     max-height:calc(100vh - 220px); z-index:22; display:none; flex-direction:column;
-    background:rgba(8,13,30,.92); border:1px solid rgba(120,160,255,.3); border-radius:18px; backdrop-filter:blur(16px);
+    background:rgba(8,13,30,.92); border:1px solid rgba(120,160,255,.3); border-radius:18px; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
     box-shadow:0 14px 50px rgba(0,0,0,.6); overflow:hidden; }
   #build.open { display:flex; }
   #build-head { display:flex; align-items:flex-start; gap:8px; padding:13px 14px 10px; border-bottom:1px solid rgba(120,160,255,.15); }
@@ -113,7 +141,7 @@
   /* Diplomatie-Panel (teilt sich Layout mit Baumenü) */
   #diplo { position:fixed; top:calc(110px + env(safe-area-inset-top)); right:12px; width:340px; max-width:calc(100vw - 24px);
     max-height:calc(100vh - 220px); z-index:22; display:none; flex-direction:column;
-    background:rgba(8,13,30,.92); border:1px solid rgba(120,160,255,.3); border-radius:18px; backdrop-filter:blur(16px);
+    background:rgba(8,13,30,.92); border:1px solid rgba(120,160,255,.3); border-radius:18px; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
     box-shadow:0 14px 50px rgba(0,0,0,.6); overflow:hidden; }
   #diplo.open { display:flex; }
   #diplo-head { padding:13px 14px 10px; border-bottom:1px solid rgba(120,160,255,.15); display:flex; align-items:flex-start; }
@@ -147,6 +175,39 @@
   .fbtns button.good { border-color:rgba(110,230,150,.5); background:rgba(30,130,60,.25); }
   .route-on { margin-top:7px; font-size:11.5px; color:#9fe8b8; }
   #diplo-foot { padding:8px 12px 10px; border-top:1px solid rgba(120,160,255,.12); font-size:11px; opacity:.6; text-align:center; }
+  /* Registrierung (Commander-Profil) */
+  #register { position:fixed; inset:0; z-index:70; display:none; align-items:center; justify-content:center;
+    background:rgba(2,4,12,.78); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); padding:16px; }
+  #register.open { display:flex; }
+  #reg-card { width:360px; max-width:100%; background:rgba(8,13,30,.96); border:1px solid rgba(120,160,255,.35);
+    border-radius:20px; padding:22px 20px; box-shadow:0 20px 60px rgba(0,0,0,.7); text-align:center;
+    max-height:calc(100vh - 32px); max-height:calc(100dvh - 32px); overflow-y:auto; }
+  #reg-card .type { font-size:10px; text-transform:uppercase; letter-spacing:.16em; color:#8fb4ff; }
+  #reg-card h2 { font-size:21px; margin:4px 0 8px; }
+  #reg-card p { font-size:12.5px; opacity:.75; line-height:1.55; margin-bottom:6px; }
+  #reg-card label { display:block; font-size:11px; text-transform:uppercase; letter-spacing:.12em; opacity:.6; margin:12px 0 6px; }
+  #reg-name { width:100%; font-size:16px; padding:11px 13px; border-radius:11px; color:#e8eefc;
+    border:1px solid rgba(120,160,255,.35); background:rgba(20,32,68,.6); outline:none; min-height:46px; }
+  #reg-name:focus { border-color:#6ea8ff; box-shadow:0 0 12px rgba(110,168,255,.35); }
+  #reg-avatars { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  #reg-avatars button { font-size:26px; padding:9px 0; border-radius:12px; cursor:pointer; min-height:52px;
+    border:1px solid rgba(120,160,255,.2); background:rgba(20,32,68,.5); touch-action:manipulation; }
+  #reg-avatars button.sel { border-color:#6ea8ff; background:rgba(70,120,255,.3); box-shadow:0 0 14px rgba(110,168,255,.4); }
+  #reg-err { display:none; font-size:12px; color:#ff9aa5; margin-top:10px; }
+  #reg-go { width:100%; margin-top:16px; padding:13px; border-radius:12px; cursor:pointer; font-size:15px; font-weight:700;
+    border:1px solid #6ea8ff; background:rgba(70,120,255,.3); color:#fff; min-height:50px; touch-action:manipulation; }
+  #reg-go:disabled { opacity:.45; cursor:not-allowed; }
+  /* Commander-Bereich im Drawer */
+  #cmdr-card { display:flex; align-items:center; gap:10px; background:rgba(20,32,68,.5); border:1px solid rgba(120,160,255,.2);
+    border-radius:12px; padding:9px 11px; margin-bottom:7px; }
+  #cmdr-card .ca { font-size:28px; }
+  #cmdr-card b { font-size:13.5px; display:block; }
+  #cmdr-card span { font-size:11px; opacity:.65; }
+  #cmdr-list button { width:100%; display:flex; align-items:center; gap:9px; text-align:left; font-size:12.5px;
+    padding:8px 10px; border-radius:10px; cursor:pointer; margin-bottom:5px; min-height:42px;
+    border:1px solid rgba(120,160,255,.18); background:rgba(10,15,32,.6); color:#c9d8ff; touch-action:manipulation; }
+  #cmdr-list button small { margin-left:auto; opacity:.55; font-size:10.5px; }
+  #btn-profile { font-size:20px; }
   #toast { position:fixed; top:calc(70px + env(safe-area-inset-top)); left:50%; transform:translateX(-50%) translateY(-8px); z-index:30;
     background:rgba(12,22,50,.92); border:1px solid #6ea8ff; border-radius:12px; padding:10px 18px; font-size:14px;
     opacity:0; transition:.3s; pointer-events:none; white-space:nowrap; max-width:calc(100vw - 32px); overflow:hidden; text-overflow:ellipsis;
@@ -170,33 +231,47 @@
   #loader p { font-size:13px; letter-spacing:.2em; text-transform:uppercase; opacity:.7; text-align:center; padding:0 24px; }
   #err { position:fixed; inset:auto 12px 12px 12px; z-index:60; display:none; background:#3a0d14; border:1px solid #ff5b6e; padding:12px; border-radius:12px; font-size:13px; }
   @media (max-width:760px){
+    #hud-top { gap:8px; padding-left:12px; padding-right:12px; }
     #hud-top h1 { font-size:14px; }
     #hud-top .sub { display:none; }
-    #toolbar { top:calc(8px + env(safe-area-inset-top)); right:8px; left:8px; max-width:none; flex-wrap:nowrap;
-      overflow-x:auto; justify-content:flex-start; padding-bottom:4px; scrollbar-width:none; }
-    #toolbar::-webkit-scrollbar { display:none; }
-    #toolbar button.chip { flex:0 0 auto; font-size:12px; padding:8px 13px; min-height:40px; }
-    #planets-bar { top:auto; bottom:calc(72px + env(safe-area-inset-bottom)); left:8px; right:8px; transform:none;
-      flex-direction:row; overflow-x:auto; padding-bottom:2px; max-height:none; scrollbar-width:none; }
-    #planets-bar::-webkit-scrollbar { display:none; }
-    #planets-bar button { width:auto; flex:0 0 auto; font-size:12px; padding:9px 12px; min-height:40px; }
+    #drawer { width:min(320px,88vw); }
     #info { bottom:auto; top:calc(112px + env(safe-area-inset-top)); left:8px; width:min(300px,calc(100vw - 16px)); padding:11px 12px; }
     #bottom { bottom:calc(8px + env(safe-area-inset-bottom)); padding:6px 12px; gap:8px; border-radius:999px; flex-wrap:nowrap; }
     #bottom label { display:none; }
     #speed { width:90px; }
     #clock { min-width:0; font-size:11px; white-space:nowrap; }
     #bottom .chip { padding:6px 10px; min-height:36px; white-space:nowrap; }
-    #hint { display:none; }
     #perf { top:calc(62px + env(safe-area-inset-top)); left:auto; right:8px; }
-    #toast { top:calc(104px + env(safe-area-inset-top)); font-size:13px; }
+    #toast { top:auto; bottom:calc(132px + env(safe-area-inset-bottom)); font-size:13px; transform:translateX(-50%) translateY(8px); }
+    #toast.show { transform:translateX(-50%) translateY(0); }
     body.ship-on.touch #joy { display:block; bottom:calc(132px + env(safe-area-inset-bottom)); left:12px; width:112px; height:112px; }
+    /* Sheet offen: Joystick über das Bottom-Sheet legen, rechts angedockt */
+    body.sheet-open.ship-on.touch #joy { bottom:auto; top:calc(180px + env(safe-area-inset-top)); left:auto; right:10px; width:96px; height:96px; opacity:.92; }
     #res { top:calc(60px + env(safe-area-inset-top)); bottom:auto; left:8px; right:8px; transform:none; font-size:12px;
       gap:10px; padding:7px 12px; justify-content:flex-start; max-width:none; }
-    body:has(#perf.show) #res { right:96px; }
+    body.perf-on #res { right:96px; }
     #diplo { top:auto; bottom:0; left:0; right:0; width:auto; max-width:none; max-height:72vh; border-radius:18px 18px 0 0;
       padding-bottom:env(safe-area-inset-bottom); }
     #build { top:auto; bottom:0; left:0; right:0; width:auto; max-width:none; max-height:72vh; border-radius:18px 18px 0 0;
       padding-bottom:env(safe-area-inset-bottom); }
+  }
+  /* Querformat-Handys (geringe Höhe): kompakte HUD-Anordnung, nichts überlappt */
+  @media (max-height:500px){
+    #hud-top { padding-top:env(safe-area-inset-top); }
+    #hud-top h1 { font-size:13px; }
+    #hud-top .sub { display:none; }
+    #res { top:calc(46px + env(safe-area-inset-top)); font-size:11px; gap:8px; padding:5px 12px; }
+    #perf { top:calc(46px + env(safe-area-inset-top)); }
+    #info { top:calc(80px + env(safe-area-inset-top)); bottom:auto; left:8px; width:250px; padding:9px 10px; }
+    #info p, #info dl { display:none; }
+    #info .row { margin-top:8px; }
+    #info .row button { min-height:36px; }
+    #bottom { padding:4px 10px; gap:6px; }
+    #speed { width:80px; min-height:30px; }
+    #clock { font-size:10px; }
+    #toast { top:calc(80px + env(safe-area-inset-top)); bottom:auto; font-size:12px; transform:translateX(-50%) translateY(-8px); }
+    #toast.show { transform:translateX(-50%) translateY(0); }
+    #build, #diplo { top:0; bottom:0; left:auto; right:0; width:min(340px,92vw); max-width:92vw; max-height:100vh; max-height:100dvh; border-radius:0; }
   }
 </style>
 <script type="importmap">
@@ -216,24 +291,50 @@
 <div id="perf"></div>
 
 <div id="hud-top">
+  <button class="chip icon" id="btn-menu" title="Menü (Planeten, Ansicht, Spiel)">☰</button>
+  <button class="chip icon" id="btn-profile" title="Commander-Profil">🧑‍🚀</button>
   <div class="title">
-    <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="6" fill="#FFC94D"/><ellipse cx="16" cy="16" rx="13" ry="5" stroke="#6EA8FF" stroke-width="1.4" transform="rotate(-20 16 16)"/><circle cx="27" cy="11" r="1.6" fill="#9FC2FF"/></svg>
+    <svg width="26" height="26" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="6" fill="#FFC94D"/><ellipse cx="16" cy="16" rx="13" ry="5" stroke="#6EA8FF" stroke-width="1.4" transform="rotate(-20 16 16)"/><circle cx="27" cy="11" r="1.6" fill="#9FC2FF"/></svg>
     <div><h1>3D <span>Weltall Simulation</span></h1><div class="sub">Sonnensystem &bull; interaktiv &bull; Three.js</div></div>
   </div>
+  <div class="spacer"></div>
+  <button class="chip icon" id="btn-ui" title="Interface ein-/ausblenden (H)">👁</button>
 </div>
+<button class="chip icon" id="btn-ui-show" title="Interface einblenden (H)">👁</button>
 
-<div id="toolbar">
-  <button class="chip active" id="btn-pause" title="Leertaste">⏸ Pause</button>
-  <button class="chip" id="btn-diplo" title="Fraktionen, Bündnisse, Krieg & Handel">🤝 Diplo</button>
-  <button class="chip" id="btn-ship" title="Schiff steuern">🚀 Schiff</button>
-  <button class="chip active" id="btn-orbits">🛰 Orbits</button>
-  <button class="chip active" id="btn-labels">🏷 Labels</button>
-  <button class="chip active" id="btn-belts">☄ Asteroiden</button>
-  <button class="chip" id="btn-tour">▶ Tour</button>
-  <button class="chip" id="btn-reset">⌂ Reset</button>
-</div>
-
-<nav id="planets-bar" aria-label="Planeten"></nav>
+<aside id="drawer" aria-label="Menü">
+  <div id="drawer-head">
+    <div><div class="type">Spielmenü</div><h2>Navigation</h2></div>
+    <button id="drawer-close" title="Schließen (ESC)">✕</button>
+  </div>
+  <div id="drawer-body">
+    <h3>🧑‍🚀 Commander</h3>
+    <div id="cmdr-card"></div>
+    <div id="cmdr-list"></div>
+    <div class="dgrid">
+      <button class="chip" id="btn-cmdr-new">➕ Neuer Commander</button>
+      <button class="chip" id="btn-cmdr-del">🗑 Löschen</button>
+    </div>
+    <h3>🪐 Planeten</h3>
+    <nav id="planets-bar" aria-label="Planeten"></nav>
+    <h3>🚀 Spiel</h3>
+    <div class="dgrid">
+      <button class="chip" id="btn-ship" title="Schiff steuern">🚀 Schiff</button>
+      <button class="chip" id="btn-diplo" title="Fraktionen, Bündnisse, Krieg & Handel">🤝 Diplo</button>
+    </div>
+    <h3>👁 Ansicht</h3>
+    <div class="dgrid">
+      <button class="chip active" id="btn-orbits">🛰 Orbits</button>
+      <button class="chip active" id="btn-labels">🏷 Labels</button>
+      <button class="chip active" id="btn-belts">☄ Asteroiden</button>
+      <button class="chip" id="btn-tour">▶ Tour</button>
+      <button class="chip" id="btn-reset">⌂ Reset</button>
+      <button class="chip" id="btn-real">Echte Größen</button>
+    </div>
+    <h3>❓ Hilfe</h3>
+    <p class="help">Ziehen = Drehen · Scroll = Zoomen · Klick = Baumenü · Doppelklick = Zoom<br/>WASD / Joystick = Fliegen · ESC = Zurück · H = Interface an/aus</p>
+  </div>
+</aside>
 
 <div id="res" aria-label="Ressourcen">
   <span>💰 <b id="r-credits">500</b> ₡</span>
@@ -276,6 +377,7 @@
 
 <aside id="info">
   <div id="info-head" title="Ein-/ausklappen">
+    <button id="info-close" title="Schließen (ESC)">✕</button>
     <span class="chev">▾</span>
     <div class="type" id="info-type">Sternensystem</div>
     <h2 id="info-name">Sonne</h2>
@@ -292,12 +394,23 @@
   <label for="speed">Zeitraffer</label>
   <input id="speed" type="range" min="0" max="300" value="40" />
   <div id="clock">Tag 0 &bull; 40×</div>
-  <button class="chip" id="btn-real">Echte Größen</button>
 </div>
 
-<div id="hint">🖱 Ziehen = Drehen &bull; Scroll = Zoom &bull; Klick = Baumenü<br/>WASD / Pfeile = Fliegen &bull; ESC = Loslösen &bull; Leertaste = Pause</div>
-
 <div id="joy"><div id="knob"></div></div>
+
+<div id="register" aria-label="Registrierung">
+  <div id="reg-card">
+    <div class="type">Commander-Registrierung</div>
+    <h2>Willkommen, Commander</h2>
+    <p>Registriere deinen Commander für das Endlos-Spiel.<br/>Jeder Commander hat einen eigenen Spielstand.</p>
+    <label for="reg-name">Rufname (2–16 Zeichen)</label>
+    <input id="reg-name" maxlength="16" placeholder="z. B. Nova" autocomplete="off" />
+    <label>Avatar wählen</label>
+    <div id="reg-avatars"></div>
+    <div id="reg-err"></div>
+    <button id="reg-go">🚀 Registrieren &amp; Starten</button>
+  </div>
+</div>
 
 <script>
 /* Lade-Fallback: falls das Three.js-CDN (Modul) nicht startet – wichtig für mobile Netze */
@@ -327,13 +440,29 @@ const showErr = (m)=>{ const e=document.getElementById('err'); e.style.display='
    PLATTFORM + QUALITÄT (Mobile: weniger Pixel, weniger Objekte)
    ============================================================ */
 const IS_TOUCH = matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window;
-const IS_SMALL = Math.min(innerWidth, innerHeight) < 500;
+let IS_SMALL = Math.min(innerWidth, innerHeight) < 500;
 const IS_MOBILE = IS_TOUCH || IS_SMALL;
 if(IS_TOUCH) document.body.classList.add('touch');
+// Kleine Screens (z. B. Rotation, Split-Screen) zur Laufzeit nachführen (für Kamera-Startposition)
+function refreshViewportClass(){
+  IS_SMALL = Math.min(innerWidth, innerHeight) < 500;
+  // Touch-Klasse dynamisch halten (Responsive-Modus, andockbare Tastaturen, Hybrid-Geräte)
+  if(matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window) document.body.classList.add('touch');
+  else document.body.classList.remove('touch');
+}
 // Qualitätsstufen: Desktop voll, Mobil reduziert, Sparmodus minimal
 const Q = IS_MOBILE
   ? { stars:[3500,1000,2500], belts:[700,400], seg:20, sunSeg:32, comets:2, pr:1.5, aa:false }
   : { stars:[9000,2500,6000], belts:[1600,900], seg:40, sunSeg:48, comets:3, pr:2, aa:true };
+// Dynamische Auflösung: Pixel-Ratio-Stufen, oberste = volle Qualität (kein visueller Unterschied zum Start)
+const PR_STEPS = IS_MOBILE ? [0.6, 0.75, 1.0, 1.25, 1.5] : [0.5, 0.7, 0.85, 1.0, 1.25, 1.5, 2.0];
+const FPS_TARGET = IS_MOBILE ? 50 : 55;
+let prIdx = PR_STEPS.length - 1;
+let currentPR = Math.min(devicePixelRatio || 1, PR_STEPS[prIdx]);
+function applyPixelRatio(){
+  currentPR = Math.min(devicePixelRatio || 1, PR_STEPS[prIdx]);
+  renderer.setPixelRatio(currentPR);
+}
 
 const canvas = document.getElementById('scene');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias:Q.aa, powerPreference: IS_MOBILE ? 'low-power' : 'high-performance' });
@@ -418,12 +547,13 @@ const milky = makeStars(Q.stars[2], 1200, 2200, 1.3, '#7a86ff');
   for(let i=0;i<p.count;i++){ if(Math.random()<0.7){ p.setY(i, p.getY(i)*0.22 + (Math.random()-0.5)*60); } }
   scene.add(milky); }
 const nebColors = ['rgba(90,40,180,1)','rgba(20,90,200,1)','rgba(180,40,120,1)','rgba(20,160,160,1)'];
+const nebGroup = new THREE.Group(); scene.add(nebGroup); // gruppiert: in Minimal-Detailstufe abschaltbar (Fill-Rate)
 nebColors.forEach((col,i)=>{
   const m = new THREE.SpriteMaterial({ map:glowTexture(col), transparent:true, opacity:0.16, depthWrite:false, blending:THREE.AdditiveBlending });
   const s = new THREE.Sprite(m);
   const a = (i/nebColors.length)*Math.PI*2;
   s.position.set(Math.cos(a)*900, (Math.random()-0.5)*300, Math.sin(a)*900);
-  s.scale.setScalar(900+Math.random()*500); scene.add(s);
+  s.scale.setScalar(900+Math.random()*500); nebGroup.add(s);
 });
 
 /* ---------- Sonne ---------- */
@@ -469,6 +599,16 @@ function addBarButton(name, color, onClick){
 }
 addBarButton('Sonne','#FFC94D',()=>selectBody(null));
 
+/* ---------- Spiel-HUD: Drawer, Kontext-Panel, Kino-Modus (früh definiert, da selectBody sie nutzt) ---------- */
+const drawerEl=document.getElementById('drawer'), infoEl=document.getElementById('info');
+function openDrawer(){ try{closeBuild();}catch(e){} try{closeDiplo();}catch(e){} drawerEl.classList.add('open'); }
+function closeDrawer(){ drawerEl.classList.remove('open'); }
+function setInfoVisible(v){ infoEl.classList.toggle('hidden',!v); }
+function setUIHidden(v){
+  document.body.classList.toggle('ui-hidden',v);
+  if(v){ closeDrawer(); try{closeBuild();}catch(e){} try{closeDiplo();}catch(e){} }
+}
+
 PLANETS.forEach((p)=>{
   const pivot = new THREE.Group(); systemGroup.add(pivot);
   const mesh = new THREE.Mesh(new THREE.SphereGeometry(p.size, Q.seg, Q.seg),
@@ -499,6 +639,18 @@ PLANETS.forEach((p)=>{
 });
 const sunLabel = makeLabel('Sonne');
 const sunBody = { kind:'star', data:{ name:'Sonne', size:6 }, mesh:sun, label:sunLabel };
+
+/* Unsichtbare Touch-Trefferflächen: kleine Planeten sind mit dem Finger sonst kaum tippbar */
+const hitTargets=[];
+const proxyGeo=new THREE.SphereGeometry(1,8,8);
+const proxyMat=new THREE.MeshBasicMaterial({ visible:false });
+function addProxy(parent, body, radius){
+  const p=new THREE.Mesh(proxyGeo, proxyMat);
+  p.scale.setScalar(radius); p.userData.body=body||null;
+  parent.add(p); hitTargets.push(p); return p;
+}
+const sunProxy=addProxy(sun, null, 9);
+bodies.forEach(b=>addProxy(b.mesh, b, Math.max(b.data.size*2.1, 1.6)));
 
 /* ---------- Asteroidengürtel + Kuipergürtel ---------- */
 const beltsGroup = new THREE.Group(); scene.add(beltsGroup);
@@ -590,13 +742,17 @@ const Game = {
   spawnShip, despawnShip,
   setSpeed(v){ timeScale = v; document.getElementById('speed').value = v; },
   get fps(){ return Math.round(fpsEMA > 0 ? 1000/fpsEMA : 60); },
+  get perf(){ return { fps:this.fps, scale:Math.round(currentPR*100), minDetail, draws:renderer.info.render.calls, tris:renderer.info.render.triangles }; },
+  profile(){ const p=activeProfile(); return p ? {...p} : null; },
 };
 window.SolarGame = Game;
 
 /* ---------- State + UI ---------- */
-let running=true, showOrbits=true, showLabels=true, timeScale=40, simDays=0;
+const running=true; // Endlos-Spiel: läuft immer, keine Pause
+let showOrbits=true, showLabels=true, timeScale=40, simDays=0;
 let selected=null, followTarget=null, tour=false, tourIdx=0, tourTimer=0;
 let realSizes=false, degraded=false, fpsEMA=16.7, fpsFrames=0, fpsTime=0;
+let qCooldown=0, minDetail=false, badgeAcc=0, qLast=performance.now(), qReal=0; // + Wanduhr für ehrliche FPS
 const baseSizes = bodies.map(b=>b.data.size);
 
 const infoType=document.getElementById('info-type'), infoName=document.getElementById('info-name'),
@@ -623,7 +779,7 @@ function selectBody(body, quiet=false){
       ? 'G2V-Hauptreihenstern: 99,86 % der Masse des Systems. Tippe einen Planeten für Details.'
       : 'G2V-Hauptreihenstern: 99,86 % der Masse des Systems. Kerntemperatur 15 Mio °C. Klicke einen Planeten für Details.';
     infoData.innerHTML=`<dt>Durchmesser</dt><dd>1,39 Mio km</dd><dt>Temperatur</dt><dd>5.505 °C</dd><dt>Alter</dt><dd>4,6 Mrd Jahre</dd>`;
-    bar.children[0].classList.add('active'); try{closeBuild();}catch(e){} return; }
+    bar.children[0].classList.add('active'); try{closeBuild();}catch(e){} setInfoVisible(true); return; }
   body.barBtn.classList.add('active');
   const p=body.data;
   infoType.textContent = p.dist<28 ? 'Gesteinsplanet' : (p.dist<46?'Gasriese':'Eisriese');
@@ -631,9 +787,11 @@ function selectBody(body, quiet=false){
   infoDesc.textContent=p.desc;
   infoData.innerHTML=`<dt>Durchmesser</dt><dd>${p.d}</dd><dt>Entfernung</dt><dd>${p.e}</dd><dt>Umlaufzeit</dt><dd>${p.u}</dd>`;
   Game.emit('select', { name:p.name });
+  setInfoVisible(true);
   if(!quiet){ try{openBuild(body);}catch(e){} }
 }
 selectBody(null);
+setInfoVisible(false); // Start: freie Sicht, Panel erscheint erst bei Auswahl
 // Info-Panel ein-/ausklappbar (mobil wichtig)
 document.getElementById('info-head').onclick=()=>document.getElementById('info').classList.toggle('collapsed');
 if(IS_SMALL) document.getElementById('info').classList.add('collapsed');
@@ -657,17 +815,22 @@ function flyTo(dest, tgt){
 // Kamera-Animation abbrechen, sobald der Nutzer selbst steuert
 controls.addEventListener('start', ()=>{ flyAnim = null; });
 
-const btnPause=document.getElementById('btn-pause');
-function setRunning(v){ running=v; btnPause.textContent=v?'⏸ Pause':'▶ Weiter'; btnPause.classList.toggle('active',v); }
-btnPause.onclick=()=>setRunning(!running);
+/* ---------- Spiel-HUD-Listener: Menü, Kino-Modus ---------- */
+document.getElementById('btn-menu').onclick=()=>{ drawerEl.classList.contains('open')?closeDrawer():openDrawer(); };
+document.getElementById('drawer-close').onclick=closeDrawer;
+document.getElementById('btn-ui').onclick=()=>setUIHidden(true);
+document.getElementById('btn-ui-show').onclick=()=>setUIHidden(false);
+document.getElementById('info-close').onclick=(e)=>{ e.stopPropagation(); setInfoVisible(false); selected=null; followTarget=null; };
 addEventListener('keydown',e=>{
-  if(e.code==='Space'){ e.preventDefault(); setRunning(!running); }
+  if(e.target && e.target.tagName==='INPUT') return; // nicht in Eingabefeldern auslösen
+  if(e.code==='KeyH'){ setUIHidden(!document.body.classList.contains('ui-hidden')); }
   if(e.key==='Escape'){
+    if(drawerEl.classList.contains('open')){ closeDrawer(); return; }
     if(diploEl.classList.contains('open')){ closeDiplo(); return; }
     if(buildEl.classList.contains('open')){ closeBuild(); return; }
     if(ship.active){ despawnShip(); btnShip.classList.remove('active'); }
     selected=null; followTarget=null; tour=false;
-    document.getElementById('btn-tour').classList.remove('active'); selectBody(null);
+    document.getElementById('btn-tour').classList.remove('active'); selectBody(null); setInfoVisible(false);
   }
 });
 
@@ -703,23 +866,33 @@ document.getElementById('btn-real').onclick=(e)=>{
 
 /* ---------- Tap-Auswahl (Touch-sicher: Distanz statt movementX/Y) ---------- */
 const ray=new THREE.Raycaster(), ptr=new THREE.Vector2();
-let downX=0, downY=0, downT=0, lastTapT=0;
-renderer.domElement.addEventListener('pointerdown',e=>{ downX=e.clientX; downY=e.clientY; downT=performance.now(); });
+let downX=0, downY=0, downT=0, lastTapT=0, activePointers=0, multiTouch=false;
+renderer.domElement.addEventListener('pointerdown',e=>{
+  activePointers++;
+  if(activePointers>1) multiTouch=true; // Pinch/laut Zoom: kein Tap auslösen
+  downX=e.clientX; downY=e.clientY; downT=performance.now();
+});
 renderer.domElement.addEventListener('pointerup',e=>{
+  activePointers=Math.max(0,activePointers-1);
+  const wasMulti=multiTouch;
+  if(activePointers===0) multiTouch=false;
+  if(wasMulti) return; // Geste mit 2+ Fingern war aktiv → kein Tap
+  if(e.isPrimary===false) return;
   const dx=e.clientX-downX, dy=e.clientY-downY;
   if(Math.hypot(dx,dy) > 10 || performance.now()-downT > 600) return; // war ein Drag
   ptr.x=(e.clientX/innerWidth)*2-1; ptr.y=-(e.clientY/innerHeight)*2+1;
   ray.setFromCamera(ptr,camera);
-  const hits=ray.intersectObjects([sun, ...bodies.map(b=>b.mesh)],false);
+  const hits=ray.intersectObjects(hitTargets,false);
   if(hits.length){
     const o=hits[0].object;
-    selectBody(o===sun ? null : o.userData.body);
+    selectBody(o===sunProxy ? null : o.userData.body);
     // Doppel-Tap = Zoom auf Objekt (dblclick feuert mobil unzuverlässig)
     const now = performance.now();
     if(now - lastTapT < 350) focusSelected();
     lastTapT = now;
   }
 });
+renderer.domElement.addEventListener('pointercancel',()=>{ activePointers=Math.max(0,activePointers-1); if(activePointers===0) multiTouch=false; });
 
 /* ---------- Joystick (Touch) + Tastatur ---------- */
 const joy = { x:0, y:0, id:null };
@@ -835,6 +1008,114 @@ const BUILD_BY_ID = {};
 Object.values(BUILDINGS).flat().forEach(b=>BUILD_BY_ID[b.id]=b);
 const FOUND_COST = 200;
 const SAVE_KEY = 'solar-save-v1';
+const LEGACY_SAVE = SAVE_KEY; // alter Schlüssel ohne Profil → wird einmalig übernommen
+
+/* ============================================================
+   COMMANDER-PROFILE (Registrierung, lokaler Mehrbenutzerbetrieb)
+   Jeder Commander hat einen eigenen Spielstand (Schlüssel mit ID).
+   Hinweis: Das ist gerätegebunden (localStorage) – echte Online-
+   Konten bräuchten einen Server mit Datenbank.
+   ============================================================ */
+const PROFILE_KEY = 'solar-profiles-v1';
+const AVATARS = ['🧑‍🚀','👩‍🚀','👨‍🚀','👽','🤖','🦊','🐺','🐙'];
+let profiles = { activeId:null, list:{} };
+let regAvatar = AVATARS[0];
+function saveKey(){ return 'solar-save-' + (profiles.activeId || 'noprofile'); }
+function loadProfiles(){
+  try{
+    const p = JSON.parse(localStorage.getItem(PROFILE_KEY));
+    if(p && p.list && typeof p.list === 'object') profiles = p;
+  }catch(e){}
+}
+function persistProfiles(){ try{ localStorage.setItem(PROFILE_KEY, JSON.stringify(profiles)); }catch(e){} }
+function activeProfile(){ return profiles.list[profiles.activeId] || null; }
+function adoptLegacySave(){
+  // Alter Spielstand ohne Profil wird übernommen statt verworfen
+  let s = null;
+  try{ s = localStorage.getItem(LEGACY_SAVE); }catch(e){}
+  return !!s;
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* Registrierungs-Dialog */
+function buildAvatarPicker(){
+  const box=document.getElementById('reg-avatars');
+  box.innerHTML='';
+  AVATARS.forEach(a=>{
+    const b=document.createElement('button');
+    b.textContent=a; b.type='button';
+    if(a===regAvatar) b.classList.add('sel');
+    b.onclick=()=>{ regAvatar=a; box.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); };
+    box.appendChild(b);
+  });
+}
+function openRegister(){
+  regAvatar=AVATARS[0];
+  buildAvatarPicker();
+  document.getElementById('reg-err').style.display='none';
+  document.getElementById('register').classList.add('open');
+  setTimeout(()=>document.getElementById('reg-name').focus(),150);
+}
+function validName(n){ n=(n||'').trim(); return (n.length>=2 && n.length<=16) ? n : null; }
+function doRegister(){
+  const err=document.getElementById('reg-err');
+  const name=validName(document.getElementById('reg-name').value);
+  if(!name){ err.style.display='block'; err.textContent='Bitte Rufnamen mit 2–16 Zeichen wählen.'; return; }
+  err.style.display='none';
+  if(profiles.activeId) saveGame(); // bisherigen Stand sichern
+  const id='c'+Date.now().toString(36)+Math.floor(Math.random()*90+10);
+  profiles.list[id]={ id, name, avatar:regAvatar, created:Date.now() };
+  profiles.activeId=id; persistProfiles();
+  try{ Game.emit('registered',{id,name}); }catch(e){}
+  location.reload(); // sauberer Neustart mit eigenem Spielstand
+}
+document.getElementById('reg-go').onclick=doRegister;
+document.getElementById('reg-name').addEventListener('keydown',e=>{
+  e.stopPropagation(); // globale Shortcuts (Leertaste/H) nicht im Eingabefeld auslösen
+  if(e.key==='Enter') doRegister();
+});
+
+/* Commander-Verwaltung im Drawer */
+function renderCommander(){
+  const me=activeProfile();
+  document.getElementById('btn-profile').textContent = me ? me.avatar : '🧑‍🚀';
+  const card=document.getElementById('cmdr-card');
+  if(me){
+    card.innerHTML=`<div class="ca">${me.avatar}</div><div><b>${escapeHtml(me.name)}</b><span>aktiv seit ${new Date(me.created).toLocaleDateString('de-DE')}</span></div>`;
+  } else card.innerHTML='<div><b>Kein Commander</b><span>Bitte registrieren</span></div>';
+  const others=Object.values(profiles.list).filter(p=>!me||p.id!==me.id);
+  const list=document.getElementById('cmdr-list');
+  list.innerHTML=(others.length?'<div style="font-size:11px;opacity:.6;margin:8px 0 5px">WECHSELN</div>':'')
+    + others.map(p=>`<button data-id="${p.id}"><span style="font-size:18px">${p.avatar}</span>${escapeHtml(p.name)}<small>spielen →</small></button>`).join('');
+  list.querySelectorAll('button').forEach(b=>b.onclick=()=>switchProfile(b.dataset.id));
+}
+function switchProfile(id){
+  if(!profiles.list[id] || id===profiles.activeId) return;
+  saveGame();
+  profiles.activeId=id; persistProfiles();
+  try{ Game.emit('profileSwitched',{id}); }catch(e){}
+  location.reload();
+}
+document.getElementById('btn-profile').onclick=()=>openDrawer();
+document.getElementById('btn-cmdr-new').onclick=()=>{ closeDrawer(); openRegister(); };
+let delArmed=false, delTimer=null;
+document.getElementById('btn-cmdr-del').onclick=(e)=>{
+  const b=e.currentTarget;
+  if(!activeProfile()) return;
+  if(!delArmed){
+    delArmed=true; b.textContent='⚠ Wirklich löschen? Nochmal tippen';
+    clearTimeout(delTimer);
+    delTimer=setTimeout(()=>{ delArmed=false; b.textContent='🗑 Löschen'; },4000);
+    return;
+  }
+  clearTimeout(delTimer); delArmed=false;
+  try{ localStorage.removeItem(saveKey()); }catch(err){}
+  delete profiles.list[profiles.activeId];
+  const rest=Object.keys(profiles.list);
+  profiles.activeId = rest.length ? rest[0] : null;
+  persistProfiles();
+  location.reload();
+};
 
 const res = { credits:500, research:0, pop:12, popCap:0, income:0, researchRate:0, growth:0.2, energy:0, defense:0, eff:1 };
 
@@ -868,8 +1149,9 @@ function ensureStation(body){
 
 /* Speichern / Laden */
 function saveGame(){
+  if(!profiles.activeId) return; // ohne registrierten Commander kein Save
   try{
-    localStorage.setItem(SAVE_KEY, JSON.stringify({
+    localStorage.setItem(saveKey(), JSON.stringify({
       res:{ credits:Math.floor(res.credits), research:Math.floor(res.research), pop:Math.floor(res.pop) },
       colonies:bodies.filter(b=>b.colony).map(b=>({ n:b.data.name, done:b.colony.done, queue:b.colony.queue })),
       factions:FACTIONS.map(f=>({ id:f.id, fleet:Math.round(f.fleet), rel:Math.round(f.rel), status:f.status, route:f.route })),
@@ -878,7 +1160,7 @@ function saveGame(){
 }
 function loadGame(){
   let s=null;
-  try{ s=JSON.parse(localStorage.getItem(SAVE_KEY)); }catch(e){}
+  try{ s=JSON.parse(localStorage.getItem(saveKey()) || localStorage.getItem(LEGACY_SAVE)); }catch(e){}
   if(!s) return;
   res.credits=s.res?.credits ?? 500; res.research=s.res?.research ?? 0; res.pop=s.res?.pop ?? 12;
   (s.colonies||[]).forEach(c=>{
@@ -952,13 +1234,17 @@ function fxLine(d){
 function openBuild(body){
   buildBody=body;
   try{closeDiplo();}catch(e){}
+  try{closeDrawer();}catch(e){}
   const p=body.data;
   buildPlanet.textContent=p.name;
   buildFacts.textContent=`${p.d} · ${p.e} · Umlauf: ${p.u}`;
   renderBuildMenu();
   buildEl.classList.add('open');
+  document.body.classList.add('sheet-open');
+  // Kleiner Screen: Info-Panel einklappen, damit das Bottom-Sheet Platz hat
+  if(IS_SMALL) document.getElementById('info').classList.add('collapsed');
 }
-function closeBuild(){ buildEl.classList.remove('open'); buildBody=null; }
+function closeBuild(){ buildEl.classList.remove('open'); buildBody=null; if(!diploEl.classList.contains('open')) document.body.classList.remove('sheet-open'); }
 function renderBuildMenu(){
   if(!buildBody) return;
   const has=!!buildBody.colony;
@@ -1046,7 +1332,7 @@ document.getElementById('build-wipe').onclick=()=>{
     b.label.textContent=b.data.name; });
   Object.assign(res,{ credits:500, research:0, pop:12, popCap:0, income:0, researchRate:0, growth:0.2, energy:0, defense:0, eff:1 });
   resetDiplo();
-  try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
+  try{ localStorage.removeItem(saveKey()); }catch(e){}
   refreshResUI(); renderBuildMenu();
   toast('🗑 Spielstand gelöscht.');
 };
@@ -1238,8 +1524,10 @@ function resetDiplo(){
 const diploEl=document.getElementById('diplo'), diploList=document.getElementById('diplo-list'),
       btnDiplo=document.getElementById('btn-diplo');
 function statusLabel(f){ return f.status==='war'?'KRIEG':(f.status==='allied'?'Verbündet':'Neutral'); }
-function openDiplo(){ closeBuild(); renderDiplo(); diploEl.classList.add('open'); }
-function closeDiplo(){ diploEl.classList.remove('open'); }
+function openDiplo(){ closeBuild(); renderDiplo(); diploEl.classList.add('open');
+  document.body.classList.add('sheet-open');
+  if(IS_SMALL) document.getElementById('info').classList.add('collapsed'); }
+function closeDiplo(){ diploEl.classList.remove('open'); document.body.classList.remove('sheet-open'); }
 function renderDiplo(){
   diploList.innerHTML=FACTIONS.map(f=>{
     const r=Math.max(-100,Math.min(100,Math.round(f.rel)));
@@ -1326,33 +1614,70 @@ Game.factions = ()=>FACTIONS.map(f=>({ id:f.id, name:f.name, rel:Math.round(f.re
 
 /* ---------- Labels projizieren (GC-arm: Vektoren wiederverwenden) ---------- */
 const projV=new THREE.Vector3(), tmpW=new THREE.Vector3();
+let labelFrame=0;
 function placeLabel(el, obj3d, yOff){
   obj3d.getWorldPosition(projV); projV.y+=yOff; projV.project(camera);
-  if(projV.z>1||!showLabels){ el.style.display='none'; return; }
-  el.style.display='block';
-  el.style.left=((projV.x*0.5+0.5)*innerWidth)+'px';
-  el.style.top=((-projV.y*0.5+0.5)*innerHeight)+'px';
+  if(projV.z>1||!showLabels){ if(el.style.display!=='none') el.style.display='none'; return; }
+  if(el.style.display!=='block') el.style.display='block';
+  // transform statt left/top: kein Layout-Reflow pro Frame
+  const x=((projV.x*0.5+0.5)*innerWidth).toFixed(1), y=((-projV.y*0.5+0.5)*innerHeight).toFixed(1);
+  el.style.transform=`translate(${x}px,${y}px) translate(-50%,-140%)`;
   obj3d.getWorldPosition(tmpW);
   el.style.opacity = camera.position.distanceTo(tmpW)>420 ? 0.25 : 0.9;
 }
+function updateLabels(){
+  // Labels gedrosselt positionieren (DOM-Schreibzugriffe kosten Layout-Zeit)
+  const every = IS_MOBILE ? 3 : 2;
+  if((labelFrame++%every)!==0) return;
+  bodies.forEach(b=>placeLabel(b.label, b.mesh, b.data.size*b.mesh.scale.x+1.1));
+  placeLabel(sunLabel, sun, 7.6);
+}
 
-/* ---------- Auto-Qualität: FPS messen, bei Bedarf drosseln ---------- */
+/* ---------- Auto-Qualität: dynamische Auflösung mit Hysterese ----------
+   Senkt/stuft die Pixel-Ratio in Stufen (statt einmalig), bis die Ziel-FPS
+   erreicht sind. Erst in der untersten Stufe werden zusätzlich Sterne,
+   Asteroiden und Nebel halbiert/abgeschaltet. Steigt die Leistung wieder,
+   wird reversibel hochgestuft – ohne sichtbaren Unterschied bei guter GPU. */
+function setMinDetail(on){
+  if(on===minDetail) return; minDetail=on;
+  starLayers.forEach(s=>s.geometry.setDrawRange(0, on?Math.floor(s.userData.fullCount/2):s.userData.fullCount));
+  beltMeshes.forEach(b=>{ b.count = on?Math.floor(b.userData.fullCount/2):b.userData.fullCount; });
+  nebGroup.visible = !on;
+  // Riesige additive Glow-Quads sind Overdraw-Hauptverursacher → temporär schrumpfen (reversibel)
+  sunGlow.scale.setScalar(on?18:30); sunGlow2.scale.setScalar(on?36:62);
+}
+function updatePerfBadge(fps){
+  perfEl.textContent = IS_SMALL ? `⚡ ${fps} FPS · ${Math.round(currentPR*100)}%` : `⚡ Sparmodus · ${fps} FPS · ${Math.round(currentPR*100)}%`;
+  if(!perfEl.classList.contains('show')) perfEl.classList.add('show');
+}
 function autoQuality(dt){
-  fpsEMA = fpsEMA*0.95 + (dt*1000)*0.05;
-  if(degraded || fpsEMA < 5) return;
-  fpsFrames++; fpsTime += dt;
-  if(fpsTime >= 3){
-    const avgFps = fpsFrames/fpsTime;
-    if(avgFps < 28){
-      degraded = true;
-      renderer.setPixelRatio(1);
-      starLayers.forEach(s=>s.geometry.setDrawRange(0, Math.floor(s.userData.fullCount/2)));
-      beltMeshes.forEach(b=>{ b.count = Math.floor(b.userData.fullCount/2); });
-      perfEl.textContent = IS_SMALL ? `⚡ ${Math.round(avgFps)} FPS` : `⚡ Sparmodus · ${Math.round(avgFps)} FPS`;
-      perfEl.classList.add('show');
-      Game.emit('degraded', { fps:Math.round(avgFps) });
+  // Wanduhr statt sim-Dt: dt ist auf 0,05 gekappt und würde FPS schönen
+  const now=performance.now();
+  const raw=Math.min(Math.max((now-qLast)/1000,0),1); qLast=now;
+  if(raw>0) fpsEMA = fpsEMA*0.95 + raw*1000*0.05;
+  if(fpsEMA < 5) return;
+  if(qCooldown>0) qCooldown-=raw;
+  fpsFrames++; qReal += raw; badgeAcc += raw;
+  if(degraded && badgeAcc>=0.5){ badgeAcc=0; updatePerfBadge(Math.round(1000/Math.max(fpsEMA,0.01))); }
+  if(qReal >= 2 && qCooldown<=0){
+    const avgFps = fpsFrames/Math.max(qReal,0.01);
+    fpsFrames=0; qReal=0;
+    if(avgFps < FPS_TARGET-8){
+      if(prIdx>0){ prIdx--; applyPixelRatio(); qCooldown=3; }
+      else setMinDetail(true);
+    } else if(avgFps > FPS_TARGET+5 && (prIdx < PR_STEPS.length-1 || minDetail)){
+      if(minDetail) setMinDetail(false);
+      else { prIdx++; applyPixelRatio(); }
+      qCooldown=3;
     }
-    fpsFrames = 0; fpsTime = 0;
+    const reduced = prIdx < PR_STEPS.length-1 || minDetail;
+    if(reduced!==degraded){
+      degraded=reduced;
+      document.body.classList.toggle('perf-on', reduced);
+      if(reduced) Game.emit('degraded', { fps:Math.round(avgFps) });
+      else perfEl.classList.remove('show');
+    }
+    if(reduced) updatePerfBadge(Math.round(avgFps));
   }
 }
 
@@ -1408,8 +1733,7 @@ function animate(){
   flyKeys(dt);
   controls.update();
 
-  bodies.forEach(b=>placeLabel(b.label, b.mesh, b.data.size*b.mesh.scale.x+1.1));
-  placeLabel(sunLabel, sun, 7.6);
+  updateLabels();
 
   const yrs=(simDays/365);
   const txt=`Tag ${fmt(Math.floor(simDays))} • ${yrs>=1?yrs.toFixed(1)+' Jahre':''} ${timeScale}×`;
@@ -1419,14 +1743,32 @@ function animate(){
 animate();
 
 function onResize(){
-  camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth,innerHeight);
+  refreshViewportClass();
+  // visualViewport: berücksichtigt mobile Browserleisten (URL-Bar), verhindert Sprünge
+  const vv = visualViewport;
+  const w = Math.round(vv ? vv.width : innerWidth), h = Math.round(vv ? vv.height : innerHeight);
+  camera.aspect=w/h; camera.updateProjectionMatrix();
+  renderer.setSize(w,h);
+  // Degraded-Modus beibehalten (dynamische Stufe, kein Zurückfallen auf volle Auflösung)
+  renderer.setPixelRatio(currentPR);
 }
-addEventListener('resize',onResize);
+let rsT=null;
+addEventListener('resize',()=>{ clearTimeout(rsT); rsT=setTimeout(onResize,120); });
+if(visualViewport) visualViewport.addEventListener('resize',()=>{ clearTimeout(rsT); rsT=setTimeout(onResize,120); });
 addEventListener('orientationchange',()=>setTimeout(onResize,200));
 
+loadProfiles();
+if(!activeProfile() && adoptLegacySave()){
+  // Bestandsspieler ohne Profil: Spielstand wird übernommen
+  const id='c'+Date.now().toString(36)+'00';
+  profiles.list[id]={ id, name:'Commander', avatar:'🧑‍🚀', created:Date.now() };
+  profiles.activeId=id; persistProfiles();
+  setTimeout(()=>toast('📦 Alter Spielstand übernommen. Willkommen zurück, Commander!'),1800);
+}
 loadGame();
 refreshResUI();
+renderCommander();
+if(!activeProfile()) openRegister(); // Erststart: Registrierung verlangen
 
 document.getElementById('loader').classList.add('done');
 </script>
